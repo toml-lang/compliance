@@ -1,7 +1,7 @@
 # DO NOT DO THIS
 
-[a]
-b = 1
+[fruit]
+apple = "red"
 
-[a]
-c = 2
+[fruit]
+orange = "orange"

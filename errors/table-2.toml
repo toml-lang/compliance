@@ -1,7 +1,7 @@
 # DO NOT DO THIS EITHER
 
-[a]
-b = 1
+[fruit]
+apple = "red"
 
-[a.b]
-c = 2
+[fruit.apple]
+texture = "smooth"
