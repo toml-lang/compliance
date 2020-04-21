@@ -1,0 +1,4 @@
+[fruit.apple.texture]  # you can add sub-tables
+smooth = true
+
+type.edible = false  # INVALID
