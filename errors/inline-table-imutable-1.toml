@@ -1,4 +1,3 @@
-[fruit.apple.texture]  # you can add sub-tables
-smooth = true
-
+[product]
+type = { name = "Nail" }
 type.edible = false  # INVALID
