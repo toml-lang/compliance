@@ -6,7 +6,7 @@ These tests provide a mechanism for implementations to verify that they are comp
 
 ## Usage
 
-Usage instructions, as well as other useful information about this repository can be found in the [documentation][docs/].
+Usage instructions, as well as other useful information about this repository can be found in the [documentation](docs/).
 
 ## Acknowledgements
 
