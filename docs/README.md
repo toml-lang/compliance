@@ -2,7 +2,7 @@
 
 Hello there! If you're reading this, you're likely implementing/maintain a TOML parser/writer (or... you're a really curious person! go you!). Thank you for your interest in TOML!
 
-For using this compliance test suite (with included runner), with a TOML decoder / encoder (parser / writer), a [specific interface](interfaces.md) to them needs to be provided. This interface (and test files themselves) utilize a [JSON encoding](json-encoding.md) of TOML documents.
+For using this compliance test suite, to test a TOML decoder / encoder, a [specific interface](interfaces.md) to them needs to be provided. This interface (and test files themselves) utilize a [JSON encoding](json-encoding.md) of TOML documents.
 
 ## Usage
 
