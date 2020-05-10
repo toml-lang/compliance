@@ -43,9 +43,9 @@ The JSON encoding for the above is:
 
 ```json
 {
-  "best-day-ever": {"type": "datetime", "value": "1987-07-05T17:45:00Z"},
+  "best-day-ever": {"type": "offset datetime", "value": "1987-07-05T17:45:00Z"},
   "number-theory": {
-    "boring": {"type": "bool", "value": "false"},
+    "boring": {"type": "boolean", "value": "false"},
     "perfection": {
       "type": "array",
       "value": [
