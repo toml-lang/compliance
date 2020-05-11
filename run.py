@@ -98,12 +98,12 @@ def ensure_executable(path):
 
 
 def _locate_test_pairs():
-    for path in (here / "invalid").glob("*.toml"):
+    for path in sorted((here / "invalid").glob("*.toml")):
         yield path, None
-    for path in (here / "invalid").glob("*.json"):
+    for path in sorted((here / "invalid").glob("*.json")):
         yield None, path
 
-    for path in (here / "valid").glob("*.toml"):
+    for path in sorted((here / "valid").glob("*.toml")):
         json_equivalent = path.with_suffix(".json")
         assert json_equivalent.exists(), f"Missing: {json_equivalent}"
         yield path, json_equivalent
