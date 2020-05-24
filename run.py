@@ -105,7 +105,7 @@ def _locate_test_pairs():
 
     for path in (here / "valid").glob("*.toml"):
         json_equivalent = path.with_suffix(".json")
-        assert json_equivalent.exists()
+        assert json_equivalent.exists(), f"Missing: {json_equivalent}"
         yield path, json_equivalent
 
 
