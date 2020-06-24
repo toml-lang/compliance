@@ -13,6 +13,9 @@ import textwrap
 from pathlib import Path
 
 
+_LATEST_VERSION = "v1.0.0-rc1"
+_ALL_VERSIONS = ["v0.4", "v1.0.0-rc1"]
+
 class Failed(Exception):
     """Raised when a check fails for some reason
 
@@ -87,7 +90,7 @@ def colored(s, *, fg=None, bg=None, bold=False):
 # --------------------------------------------------------------------------------------
 # Filesystem interaction
 # --------------------------------------------------------------------------------------
-here = Path(__file__).parent
+all_tests_dir = Path(__file__).parent / "tests"
 
 
 def ensure_executable(path):
@@ -97,13 +100,13 @@ def ensure_executable(path):
         raise PermissionError(f"Not an executable file: {path}")
 
 
-def _locate_test_pairs():
-    for path in (here / "invalid").glob("*.toml"):
+def _locate_test_pairs(tests_dir):
+    for path in (tests_dir / "invalid").glob("*.toml"):
         yield path, None
-    for path in (here / "invalid").glob("*.json"):
+    for path in (tests_dir / "invalid").glob("*.json"):
         yield None, path
 
-    for path in (here / "valid").glob("*.toml"):
+    for path in (tests_dir / "valid").glob("*.toml"):
         json_equivalent = path.with_suffix(".json")
         assert json_equivalent.exists(), f"Missing: {json_equivalent}"
         yield path, json_equivalent
@@ -127,8 +130,9 @@ def _filter_based_on_markers(pairs, markers):
     yield from filter(marker_filter, pairs)
 
 
-def get_test_pairs(markers):
-    pairs = _locate_test_pairs()
+def get_test_pairs(version, markers):
+    test_dir = all_tests_dir / version
+    pairs = _locate_test_pairs(test_dir)
     yield from _filter_based_on_markers(pairs, markers)
 
 
@@ -208,7 +212,7 @@ def test_encoder(json_file, clean_exit, encoder, decoder):
 def _show_summary(counts):
     total = sum(counts.values())
     if total == 0:
-        print(colored("Deselected all tests!", fg="red"))
+        print(colored("No tests were selected!", fg="red"))
         return
 
     n_passed = colored(
@@ -257,9 +261,9 @@ def run_with_reporting(function, checks):
     return 0
 
 
-def encoder_compliance(encoder, decoder, markers):
+def encoder_compliance(encoder, decoder, version, markers):
     def generate_parameters():
-        for toml_file, json_file in get_test_pairs(markers):
+        for toml_file, json_file in get_test_pairs(version, markers):
             if json_file is None:  # need something to encode!
                 continue
             yield (
@@ -278,9 +282,9 @@ def encoder_compliance(encoder, decoder, markers):
     return run_with_reporting(test_encoder, generate_parameters())
 
 
-def decoder_compliance(decoder, markers):
+def decoder_compliance(decoder, version, markers):
     def generate_parameters():
-        for toml_file, json_file in get_test_pairs(markers):
+        for toml_file, json_file in get_test_pairs(version, markers):
             if toml_file is None:  # need something to decode!
                 continue
             yield (
@@ -319,6 +323,15 @@ def get_parser():
         help="Only run tests that match given marker. Can be specified multiple times.",
         nargs=1,
     )
+    encoder.add_argument(
+        "--version",
+        default=f"{_LATEST_VERSION}",
+        dest="version",
+        help=f"""
+             TOML version to use for tests.
+             Default is version \"{_LATEST_VERSION}\"""",
+        choices=_ALL_VERSIONS,
+    )
 
     decoder = subparsers.add_parser("decoder")
     decoder.add_argument("target", action="store", help="Encoder to test")
@@ -328,6 +341,15 @@ def get_parser():
         dest="markers",
         help="Only run tests that match given marker. Can be specified multiple times.",
         nargs=1,
+    )
+    decoder.add_argument(
+        "--version",
+        default=f"{_LATEST_VERSION}",
+        choices=_ALL_VERSIONS,
+        dest="version",
+        help=f"""
+             TOML version to use for tests.
+             Default is version \"{_LATEST_VERSION}\"""",
     )
 
     return parser
@@ -346,8 +368,8 @@ if __name__ == "__main__":
     should_run_encoder_tests = "decoder" in args
 
     if should_run_encoder_tests:
-        exit_code = encoder_compliance(args.target, args.decoder, args.markers)
+        exit_code = encoder_compliance(args.target, args.decoder, args.version, args.markers)
     else:
-        exit_code = decoder_compliance(args.target, args.markers)
+        exit_code = decoder_compliance(args.target, args.version, args.markers)
 
     sys.exit(exit_code)
