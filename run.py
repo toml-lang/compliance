@@ -87,7 +87,7 @@ def colored(s, *, fg=None, bg=None, bold=False):
 # --------------------------------------------------------------------------------------
 # Filesystem interaction
 # --------------------------------------------------------------------------------------
-here = Path(__file__).parent
+tests_dir = Path(__file__).parent / "tests"
 
 
 def ensure_executable(path):
@@ -98,12 +98,12 @@ def ensure_executable(path):
 
 
 def _locate_test_pairs():
-    for path in (here / "invalid").glob("*.toml"):
+    for path in (tests_dir / "invalid").glob("*.toml"):
         yield path, None
-    for path in (here / "invalid").glob("*.json"):
+    for path in (tests_dir / "invalid").glob("*.json"):
         yield None, path
 
-    for path in (here / "valid").glob("*.toml"):
+    for path in (tests_dir / "valid").glob("*.toml"):
         json_equivalent = path.with_suffix(".json")
         assert json_equivalent.exists(), f"Missing: {json_equivalent}"
         yield path, json_equivalent
