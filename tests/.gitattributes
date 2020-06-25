@@ -1,3 +1,3 @@
 *.toml text=auto
 *.yaml text=auto
-values/spec-newline-*.toml binary
+valid/spec-newline-*.toml binary
