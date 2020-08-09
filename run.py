@@ -98,12 +98,12 @@ def ensure_executable(path):
 
 
 def _locate_test_pairs():
-    for path in (here / "invalid").glob("*.toml"):
+    for path in sorted((here / "invalid").glob("*/*.toml")):
         yield path, None
-    for path in (here / "invalid").glob("*.json"):
+    for path in sorted((here / "invalid").glob("*/*.json")):
         yield None, path
 
-    for path in (here / "valid").glob("*.toml"):
+    for path in sorted((here / "valid").glob("*/*.toml")):
         json_equivalent = path.with_suffix(".json")
         assert json_equivalent.exists(), f"Missing: {json_equivalent}"
         yield path, json_equivalent
@@ -116,11 +116,14 @@ def _filter_based_on_markers(pairs, markers):
             return True
 
         for m in markers:
-            # Matches the name of the file (allows -m array)
+            # Matches the name of the file (allows -m basic)
             if m in pair[0].stem:
                 return True
-            # Matches the name of the parent folder (allows -m invalid)
+            # Matches the name of the parent folder (allows -m array)
             if m == pair[0].parent.name:
+                return True
+            # Matches the name of the grandparent folder (allows -m invalid)
+            if m == pair[0].parent.parent.name:
                 return True
         return False
 
