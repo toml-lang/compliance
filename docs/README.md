@@ -46,15 +46,19 @@ The encoder tests require a specification-compliant decoder. The encoder's outpu
 
 ### Markers
 
-For both these commands, `-m` can be used to provide "markers" which are used to filter tests based on their category (`valid` or `invalid`) or names (good choices would be `array`, `table`, `unicode`). You may provide this option multiple times. A few examples:
+For both these commands, `-m` can be used to provide "markers" which are used to filter tests. Markers can match the overall category (`valid` or `invalid`), the sub-category they're in (like `array`, `int` ,`float`) or a part of the filename of the test (eg: `unicode`)
+
+A few examples:
 
 ```sh-session
 # run for all valid decoder tests
 $ python run.py decoder <your-decoder> -m valid
-# run for all invalid decoder tests, with "array" in their name
-$ python run.py decoder <your-decoder> -m array -m invalid
-# run for all decoder tests, with "table" in their name
+# run for all decoder tests, in the "table" subfolder
 $ python run.py decoder <your-decoder> -m table
+# run for all invalid decoder tests, in the "array" subfolder
+$ python run.py decoder <your-decoder> -m array -m invalid
+# run for all invalid decoder tests, with "unicode" in the filename
+$ python run.py decoder <your-decoder> -m unicode
 ```
 
 ### Naming
