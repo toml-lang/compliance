@@ -4,6 +4,18 @@ Hello there! If you're reading this, you're likely implementing/maintain a TOML 
 
 For using this compliance test suite, to test a TOML decoder / encoder, a [specific interface](interfaces.md) to them needs to be provided. This interface (and test files themselves) utilize a [JSON encoding](json-encoding.md) of TOML documents.
 
+## Test Layout
+
+There are 2 categories of tests in this repository: valid and invalid.
+
+Valid tests check that a decoder (AKA parser) accepts valid TOML documents, and an encoder represents data correctly as TOML. Each valid tests consists of two files -- a `.toml` file containing a valid TOML document and a `.json` file containing the JSON encoding of that document.
+
+Invalid tests check that a decoder rejects invalid TOML data, and an encoder rejects data that can not be represented as TOML. An invalid test consist of a single `.toml` file (invalid TOML data, decoder) or a single `.json` file (invalid JSON encoding, encoder).
+
+Both the `valid/` and `invalid/` folders contain folders for sub-categories, based on which part of the TOML they are for (eg: array, int, float).
+
+The tests should be small enough that writing the JSON encoding by hand will not give you brain damage. The exact reverse is true when testing encoders.
+
 ## Usage
 
 > NOTE: If you're not able to use the provided runner for some technical reason, consider filing an issue. You can write your own test runner obviously, but that might be more work than necessary.
@@ -44,16 +56,6 @@ $ python run.py decoder <your-decoder> -m array -m invalid
 # run for all decoder tests, with "table" in their name
 $ python run.py decoder <your-decoder> -m table
 ```
-
-## Test Layout
-
-There are 2 kinds of tests in this repository: valid and invalid.
-
-Valid tests check that a decoder (AKA parser) accepts valid TOML documents, and an encoder represents data correctly as TOML. Each valid tests consists of two files -- a `.toml` file containing a valid TOML document and a `.json` file containing the JSON encoding of that document.
-
-Invalid tests check that a decoder rejects invalid TOML data, and an encoder rejects data that can not be represented as TOML. An invalid test consist of a single `.toml` file (invalid TOML data, decoder) or a single `.json` file (invalid JSON encoding, encoder).
-
-The tests should be small enough that writing the JSON encoding by hand will not give you brain damage. The exact reverse is true when testing encoders.
 
 ### Naming
 
