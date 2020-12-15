@@ -45,6 +45,14 @@ class Failed(Exception):
         super().__init__(reason, self.details)
 
 
+class JSONValidationError(Exception):
+    """Raised when the JSON data does not have valid types or values for the type.
+    """
+
+    def __repr__(self):
+        return str(self)
+
+
 # --------------------------------------------------------------------------------------
 # Colors
 # --------------------------------------------------------------------------------------
@@ -159,14 +167,24 @@ def run_program(program, *, stdin, clean_exit):
     return process.stdout
 
 
+def validate_json(obj):
+    # raise JSONValidationError("This is what the error looks like!\nlol")
+    pass
+
+
 def load_json(*, content, source):
     assert source in ["decoder's output", "test case input"]
     try:
-        return json.loads(content)
+        loaded = json.loads(content)
     except json.JSONDecodeError as error:
         raise Failed(f"Could not parse {source} JSON", cause=error)
 
-    # TODO: validation and normalization?
+    try:
+        validate_json(loaded)
+    except JSONValidationError as error:
+        # Note that we're passing the error as 'details' here, since we want the string
+        # representation (which gets formatted correctly).
+        raise Failed(f"Got incorrect JSON from {source}", error=error)
 
 
 # --------------------------------------------------------------------------------------
